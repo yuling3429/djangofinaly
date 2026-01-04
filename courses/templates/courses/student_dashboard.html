@@ -1,0 +1,122 @@
+{% extends 'courses/base.html' %}
+
+{% block title %}成績單 - {{ user.get_full_name }}{% endblock %}
+
+{% block content %}
+<h1>📋 成績單 - {{ user.get_full_name }}</h1>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">學生資訊</h5>
+                <p><strong>使用者名稱：</strong> {{ user.username }}</p>
+                <p><strong>姓名：</strong> {{ user.get_full_name }}</p>
+                <p><strong>信箱：</strong> {{ user.email }}</p>
+                {% if user.profile.phone %}
+                    <p><strong>電話：</strong> {{ user.profile.phone }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">成績統計</h5>
+                <p><strong>修習課程數：</strong> <span class="badge bg-primary">{{ enrollments.count }}</span></p>
+                <p><strong>總平均分數：</strong> 
+                    {% if average_score %}
+                        <span class="badge bg-success" style="font-size: 16px;">{{ average_score|floatformat:2 }}</span>
+                    {% else %}
+                        <span class="badge bg-warning">待登錄</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3>修習課程</h3>
+
+{% if enrollments %}
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>課號</th>
+                <th>課名</th>
+                <th>任課老師</th>
+                <th>學分</th>
+                <th>期中</th>
+                <th>期末</th>
+                <th>科目分數</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for enrollment in enrollments %}
+            <tr>
+                <td>
+                    <a href="{% url 'courses:course_detail' enrollment.course.id %}">
+                        {{ enrollment.course.course_code }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{% url 'courses:course_detail' enrollment.course.id %}">
+                        {{ enrollment.course.course_name }}
+                    </a>
+                </td>
+                <td>{{ enrollment.course.teacher.user.get_full_name }}</td>
+                <td>{{ enrollment.course.credits }}</td>
+                <td>
+                    {% if enrollment.midterm_score %}
+                        {{ enrollment.midterm_score }}
+                    {% else %}
+                        <span class="badge bg-secondary">未登錄</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if enrollment.final_score %}
+                        {{ enrollment.final_score }}
+                    {% else %}
+                        <span class="badge bg-secondary">未登錄</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if enrollment.get_total_score %}
+                        <strong class="text-success">{{ enrollment.get_total_score }}</strong>
+                    {% else %}
+                        <span class="badge bg-warning">待登錄</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'courses:drop_course' enrollment.id %}" class="btn btn-sm btn-danger" onclick="return confirm('確定退選此課程嗎？');">退選</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-warning" role="alert">
+    <h4 class="alert-heading">尚未選課</h4>
+    <p>您目前還沒有選修任何課程。請前往<a href="{% url 'courses:course_list' %}">課程列表</a>選課。</p>
+</div>
+{% endif %}
+
+<h3 class="mt-5">可選課程</h3>
+
+{% with enrolled_course_ids=enrollments.values_list|join:"," %}
+<div class="row">
+    {% for course in enrollments %}
+        {% comment %} This is just showing enrolled courses, we need a separate view for available courses {% endcomment %}
+    {% endfor %}
+</div>
+
+<p>
+    <a href="{% url 'courses:course_list' %}" class="btn btn-primary">
+        🔍 瀏覽所有課程並選課
+    </a>
+</p>
+{% endwith %}
+{% endblock %}

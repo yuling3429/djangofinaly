@@ -1,0 +1,54 @@
+{% extends 'courses/base.html' %}
+
+{% block title %}課程管理{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>📚 課程管理</h1>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="{% url 'courses:admin_add_course' %}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> 新增課程
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>課號</th>
+                        <th>課名</th>
+                        <th>任課教師</th>
+                        <th>學分</th>
+                        <th>選課人數</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for course in courses %}
+                    <tr>
+                        <td>{{ course.course_code }}</td>
+                        <td>{{ course.course_name }}</td>
+                        <td>{{ course.instructor_name }}</td>
+                        <td>{{ course.credits }}</td>
+                        <td>{{ course.get_current_enrollment_count }} / {{ course.max_students }}</td>
+                        <td>
+                            <a href="{% url 'courses:admin_delete_course' course.pk %}"
+                                class="btn btn-danger btn-sm">刪除</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center">暫無課程資料</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

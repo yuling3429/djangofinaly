@@ -1,0 +1,70 @@
+{% extends 'courses/base.html' %}
+
+{% block title %}教師儀表板{% endblock %}
+
+{% block content %}
+<h1>👨‍🏫 教師儀表板</h1>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">教師信息</h5>
+                <p><strong>編號：</strong> {{ teacher.teacher_id }}</p>
+                <p><strong>姓名：</strong> {{ teacher.user.get_full_name }}</p>
+                <p><strong>部門：</strong> {{ teacher.department|default:"未設定" }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">統計</h5>
+                <p><strong>授課課程：</strong> <span class="badge bg-primary">{{ courses.count }}</span></p>
+                <a href="{% url 'courses:teacher_add_course' %}" class="btn btn-success btn-sm">
+                    <i class="fas fa-plus"></i> 新增課程
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3>📚 我的課程</h3>
+
+{% if courses %}
+    <div class="row">
+        {% for course in courses %}
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">{{ course.course_code }} - {{ course.course_name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>課程代碼：</strong> {{ course.course_code }}</p>
+                        <p><strong>學分：</strong> {{ course.credits }}</p>
+                        <p><strong>選修人數：</strong> <span class="badge bg-info">{{ course.get_current_enrollment_count }}/{{ course.max_students }}</span></p>
+                        {% if course.description %}
+                            <p><strong>描述：</strong> {{ course.description|truncatewords:20 }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <a href="{% url 'courses:teacher_course_students' course.id %}" class="btn btn-info btn-sm">
+                            <i class="fas fa-users"></i> 查看學生成績
+                        </a>
+                        <a href="{% url 'courses:course_detail' course.id %}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-eye"></i> 查看課程
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        你還沒有任何課程。點擊下方按鈕新增課程。
+        <br><br>
+        <a href="{% url 'courses:teacher_add_course' %}" class="btn btn-primary mt-2">新增課程</a>
+    </div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'courses/base.html' %}
+
+{% block title %}登入{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">🔑 用戶登入</h4>
+            </div>
+            <div class="card-body">
+                {% if error %}
+                    <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">用戶名</label>
+                        <input type="text" class="form-control" id="id_username" name="username" required autofocus>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">密碼</label>
+                        <input type="password" class="form-control" id="id_password" name="password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">登入</button>
+                </form>
+                
+                <hr>
+                <p class="text-center">
+                    沒有帳號？<a href="{% url 'courses:register' %}">立即註冊</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

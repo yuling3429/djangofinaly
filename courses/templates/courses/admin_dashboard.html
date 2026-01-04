@@ -1,0 +1,92 @@
+{% extends 'courses/base.html' %}
+
+{% block title %}管理員儀表板{% endblock %}
+
+{% block content %}
+<h1>🔧 管理員儀表板</h1>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="card-title">{{ stats.total_users }}</h3>
+                <p class="card-text">總用戶數</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="card-title">{{ stats.total_students }}</h3>
+                <p class="card-text">學生</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="card-title">{{ stats.total_teachers }}</h3>
+                <p class="card-text">教師</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h3 class="card-title">{{ stats.total_courses }}</h3>
+                <p class="card-text">課程</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3>管理功能</h3>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">👨‍🏫 教師管理</h5>
+            </div>
+            <div class="card-body">
+                <p>查看、新增或刪除學校教師帳號</p>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'courses:admin_teacher_list' %}" class="btn btn-info text-white">管理教師列表</a>
+                    <a href="{% url 'courses:admin_add_teacher' %}" class="btn btn-outline-primary">新增教師</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">📚 課程管理</h5>
+            </div>
+            <div class="card-body">
+                <p>查看、新增或刪除課程資料</p>
+                <div class="d-grid gap-2">
+                    <a href="{% url 'courses:admin_course_list' %}" class="btn btn-info text-white">管理課程列表</a>
+                    <a href="{% url 'courses:admin_add_course' %}" class="btn btn-outline-primary">新增課程</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mt-5">系統管理</h3>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">🔑 Django 管理後台</h5>
+            </div>
+            <div class="card-body">
+                <p>訪問 Django 管理介面以進行更多管理操作</p>
+                <a href="/admin/" class="btn btn-secondary" target="_blank">進入管理後台</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

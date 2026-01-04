@@ -1,0 +1,27 @@
+{% extends 'courses/base.html' %}
+
+{% block title %}確認刪除{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0">⚠️ 確認刪除</h4>
+            </div>
+            <div class="card-body">
+                <p class="lead">您確定要刪除 {{ type }} <strong>{{ object }}</strong> 嗎？</p>
+                <p class="text-danger">此操作無法復原。</p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-danger btn-lg">確認刪除</button>
+                        <a href="javascript:history.back()" class="btn btn-secondary btn-lg">取消</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

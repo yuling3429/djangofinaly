@@ -1,0 +1,79 @@
+{% extends 'courses/base.html' %}
+
+{% block title %}課程列表{% endblock %}
+
+{% block content %}
+<h1>📚 課程列表</h1>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <form method="GET" class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="搜尋課程..." value="{{ search }}">
+            <button class="btn btn-primary" type="submit">
+                <i class="fas fa-search"></i> 搜尋
+            </button>
+        </form>
+    </div>
+    <div class="col-md-4 text-end">
+        {% if user.is_authenticated and user.profile.role == 'admin' %}
+            <a href="{% url 'courses:admin_add_course' %}" class="btn btn-success">
+                <i class="fas fa-plus"></i> 新增課程
+            </a>
+        {% elif user.is_authenticated and user.profile.role == 'teacher' %}
+            <a href="{% url 'courses:teacher_add_course' %}" class="btn btn-success">
+                <i class="fas fa-plus"></i> 新增課程
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+{% if courses %}
+    <div class="row">
+        {% for course in courses %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">{{ course.course_name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>課號：</strong> {{ course.course_code }}</p>
+                        <p><strong>任課教師：</strong> {{ course.teacher.user.get_full_name }}</p>
+                        <p><strong>學分：</strong> <span class="badge bg-info">{{ course.credits }}</span></p>
+                        <p><strong>選修人數：</strong> 
+                            <span class="badge bg-primary">
+                                {{ course.get_current_enrollment_count }}/{{ course.max_students }}
+                            </span>
+                        </p>
+                        <p><strong>學期：</strong> {{ course.semester }}</p>
+                        {% if course.description %}
+                            <p><strong>課程描述：</strong></p>
+                            <p style="color: #666; font-size: 14px;">{{ course.description|truncatewords:20 }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer bg-light">
+                        <a href="{% url 'courses:course_detail' course.id %}" class="btn btn-info btn-sm">
+                            <i class="fas fa-book-open"></i> 課程詳情
+                        </a>
+                        {% if user.is_authenticated and user.profile.role == 'student' %}
+                            <a href="{% url 'courses:add_enrollment' course.id %}" class="btn btn-success btn-sm">
+                                <i class="fas fa-plus"></i> 選課
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">尚無課程</h4>
+        <p>
+            {% if search %}
+                未找到符合「{{ search }}」的課程。
+            {% else %}
+                系統中還沒有任何課程。
+            {% endif %}
+        </p>
+    </div>
+{% endif %}
+{% endblock %}

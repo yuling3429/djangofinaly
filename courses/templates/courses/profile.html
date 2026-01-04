@@ -1,0 +1,79 @@
+{% extends 'courses/base.html' %}
+
+{% block title %}個人資料{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 text-center">
+        <div class="card">
+            <div class="card-body">
+                {% if profile.avatar %}
+                    <img src="{{ profile.avatar.url }}" alt="{{ user.get_full_name }}" class="avatar-circle mb-3">
+                {% else %}
+                    <div style="width: 120px; height: 120px; background-color: #e0e0e0; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-user fa-5x" style="color: #999;"></i>
+                    </div>
+                {% endif %}
+                <h3>{{ user.get_full_name }}</h3>
+                <p class="text-muted">{{ user.username }}</p>
+                <span class="role-badge {{ profile.role }}">
+                    {{ profile.get_role_display }}
+                </span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        {% if success %}
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> {{ success }}
+            </div>
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">✏️ 編輯個人資料</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="id_first_name" class="form-label">名字</label>
+                        {{ user_form.first_name }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_last_name" class="form-label">姓氏</label>
+                        {{ user_form.last_name }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label">電子郵件</label>
+                        {{ user_form.email }}
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="mb-3">
+                        <label for="id_avatar" class="form-label">頭像</label>
+                        {{ profile_form.avatar }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_bio" class="form-label">個人簡介</label>
+                        {{ profile_form.bio }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_phone" class="form-label">電話</label>
+                        {{ profile_form.phone }}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">保存變更</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

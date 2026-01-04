@@ -1,0 +1,191 @@
+{% extends 'courses/base.html' %}
+
+{% block title %}成績系統 - 首頁{% endblock %}
+
+{% block content %}
+{% if not user.is_authenticated %}
+<div class="row mb-5">
+    <div class="col-md-12">
+        <div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none;">
+            <div class="card-body text-center py-5">
+                <h1 class="card-title mb-4">📚 歡迎來到成績系統</h1>
+                <p class="lead">完整的學生成績管理平台，支持多角色管理</p>
+                <div class="mt-4">
+                    <a href="{% url 'courses:register' %}" class="btn btn-light btn-lg me-2">
+                        📝 註冊新帳號
+                    </a>
+                    <a href="{% url 'courses:login' %}" class="btn btn-outline-light btn-lg">
+                        🔑 登入
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<h1>成績系統</h1>
+
+{% if user.is_authenticated %}
+<div class="alert alert-info">
+    <i class="fas fa-info-circle"></i>
+    歡迎回來，<strong>{{ user.get_full_name }}</strong>!
+</div>
+
+{% if user.profile.role == 'student' %}
+<div class="row mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div style="font-size: 48px; margin-bottom: 15px;">📊</div>
+                <h5 class="card-title">我的成績單</h5>
+                <p class="card-text">檢視你修習的課程及各科分數</p>
+                <a href="{% url 'courses:student_dashboard' %}" class="btn btn-primary">進入成績單</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div style="font-size: 48px; margin-bottom: 15px;">📚</div>
+                <h5 class="card-title">課程列表</h5>
+                <p class="card-text">瀏覽所有開設課程及課程資訊</p>
+                <a href="{% url 'courses:course_list' %}" class="btn btn-primary">查看課程</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div style="font-size: 48px; margin-bottom: 15px;">👤</div>
+                <h5 class="card-title">個人資料</h5>
+                <p class="card-text">管理個人信息和頭像</p>
+                <a href="{% url 'courses:profile' %}" class="btn btn-primary">編輯資料</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% elif user.profile.role == 'teacher' %}
+<div class="row mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div style="font-size: 48px; margin-bottom: 15px;">👨‍🏫</div>
+                <h5 class="card-title">我的課程</h5>
+                <p class="card-text">管理你的課程和學生</p>
+                <a href="{% url 'courses:teacher_dashboard' %}" class="btn btn-primary">進入儀表板</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div style="font-size: 48px; margin-bottom: 15px;">➕</div>
+                <h5 class="card-title">新增課程</h5>
+                <p class="card-text">建立新的教學課程</p>
+                <a href="{% url 'courses:teacher_add_course' %}" class="btn btn-primary">新增課程</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div style="font-size: 48px; margin-bottom: 15px;">👤</div>
+                <h5 class="card-title">個人資料</h5>
+                <p class="card-text">管理個人信息和頭像</p>
+                <a href="{% url 'courses:profile' %}" class="btn btn-primary">編輯資料</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% elif user.profile.role == 'admin' %}
+<div class="row mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div style="font-size: 48px; margin-bottom: 15px;">🔧</div>
+                <h5 class="card-title">管理面板</h5>
+                <p class="card-text">系統管理和統計信息</p>
+                <a href="{% url 'courses:admin_dashboard' %}" class="btn btn-primary">進入管理</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div style="font-size: 48px; margin-bottom: 15px;">➕</div>
+                <h5 class="card-title">新增教師</h5>
+                <p class="card-text">為學校添加教師帳號</p>
+                <a href="{% url 'courses:admin_add_teacher' %}" class="btn btn-primary">新增教師</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div style="font-size: 48px; margin-bottom: 15px;">📚</div>
+                <h5 class="card-title">新增課程</h5>
+                <p class="card-text">為學校添加新課程</p>
+                <a href="{% url 'courses:admin_add_course' %}" class="btn btn-primary">新增課程</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endif %}
+
+{% else %}
+
+<div class="row mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div style="font-size: 48px; margin-bottom: 15px;">📊</div>
+                <h5 class="card-title">學生功能</h5>
+                <p class="card-text">查看成績、選課、留言</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div style="font-size: 48px; margin-bottom: 15px;">👨‍🏫</div>
+                <h5 class="card-title">教師功能</h5>
+                <p class="card-text">管理課程、錄入成績</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-center h-100">
+            <div class="card-body">
+                <div style="font-size: 48px; margin-bottom: 15px;">🔧</div>
+                <h5 class="card-title">管理員功能</h5>
+                <p class="card-text">系統管理、數據統計</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info mt-5" role="alert">
+    <h4 class="alert-heading">🔐 系統特性</h4>
+    <ul>
+        <li><strong>多角色系統：</strong>學生、教師、管理員三種角色</li>
+        <li><strong>成績管理：</strong>期中、期末分數自動計算平均</li>
+        <li><strong>課程留言：</strong>學生可以在課程頁面留言和互動</li>
+        <li><strong>個人資料：</strong>支持頭像上傳和個人信息修改</li>
+        <li><strong>選課系統：</strong>學生可自由選課和退選</li>
+    </ul>
+</div>
+
+{% endif %}
+{% endblock %}

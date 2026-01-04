@@ -1,0 +1,70 @@
+{% extends 'courses/base.html' %}
+
+{% block title %}編輯課程 - {{ course.course_name }}{% endblock %}
+
+{% block content %}
+<h1>✏️ 編輯課程 - {{ course.course_name }}</h1>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <form method="POST" class="form-horizontal">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label for="id_course_code" class="form-label">課號 *</label>
+                {{ form.course_code }}
+                {% if form.course_code.errors %}
+                    <div class="alert alert-danger mt-2">{{ form.course_code.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_course_name" class="form-label">課名 *</label>
+                {{ form.course_name }}
+                {% if form.course_name.errors %}
+                    <div class="alert alert-danger mt-2">{{ form.course_name.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_instructor" class="form-label">任課老師 *</label>
+                {{ form.instructor }}
+                {% if form.instructor.errors %}
+                    <div class="alert alert-danger mt-2">{{ form.instructor.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="id_credits" class="form-label">學分 *</label>
+                    {{ form.credits }}
+                    {% if form.credits.errors %}
+                        <div class="alert alert-danger mt-2">{{ form.credits.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="id_max_students" class="form-label">最大選修人數 *</label>
+                    {{ form.max_students }}
+                    {% if form.max_students.errors %}
+                        <div class="alert alert-danger mt-2">{{ form.max_students.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_description" class="form-label">課程描述</label>
+                {{ form.description }}
+                {% if form.description.errors %}
+                    <div class="alert alert-danger mt-2">{{ form.description.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{% url 'courses:course_detail' course.id %}" class="btn btn-secondary">取消</a>
+                <button type="submit" class="btn btn-primary">保存變更</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

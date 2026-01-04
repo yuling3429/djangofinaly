@@ -1,0 +1,81 @@
+{% extends 'courses/base.html' %}
+
+{% block title %}新增教師帳號{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        {% if success %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="fas fa-check-circle"></i> {{ success }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endif %}
+        
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title mb-0">➕ 新增教師帳號</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    
+                    <h5>帳號信息</h5>
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">用戶名 *</label>
+                        {{ user_form.username }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_first_name" class="form-label">名字 *</label>
+                        {{ user_form.first_name }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_last_name" class="form-label">姓氏</label>
+                        {{ user_form.last_name }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label">電子郵件 *</label>
+                        {{ user_form.email }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password1" class="form-label">密碼 *</label>
+                        {{ user_form.password1 }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password2" class="form-label">確認密碼 *</label>
+                        {{ user_form.password2 }}
+                    </div>
+                    
+                    <hr>
+                    
+                    <h5>教師信息</h5>
+                    <div class="mb-3">
+                        <label for="id_teacher_id" class="form-label">教工編號 *</label>
+                        {{ teacher_form.teacher_id }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_department" class="form-label">所屬部門</label>
+                        {{ teacher_form.department }}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_bio" class="form-label">教師簡介</label>
+                        {{ teacher_form.bio }}
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'courses:admin_dashboard' %}" class="btn btn-secondary">返回</a>
+                        <button type="submit" class="btn btn-primary">建立教師帳號</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
