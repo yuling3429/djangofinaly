@@ -130,3 +130,11 @@ LOGOUT_REDIRECT_URL = 'courses:index'
 
 # Session settings
 SESSION_COOKIE_AGE = 1209600  # 2 weeks
+SESSION_SAVE_EVERY_REQUEST = True  # Renew session on every request
+
+# CSRF settings
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+]
+CSRF_COOKIE_AGE = 31449600  # 1 year for CSRF cookie

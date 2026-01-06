@@ -89,13 +89,21 @@ def user_login(request):
                 else:
                     return redirect('courses:student_dashboard')
             except UserProfile.DoesNotExist:
-                # 不要自動創建 profile,而是顯示錯誤訊息
-                logout(request)
-                context = {
-                    'error': '您的帳號尚未完成設定,請聯繫管理員',
-                    'title': '登入'
-                }
-                return render(request, 'courses/login.html', context)
+                # 嘗試檢查用戶是否有 Teacher 對象，如有則自動創建 profile
+                from .models import Teacher
+                try:
+                    teacher = Teacher.objects.get(user=user)
+                    # 有 Teacher 對象，創建 teacher profile
+                    UserProfile.objects.create(user=user, role='teacher')
+                    return redirect('courses:teacher_dashboard')
+                except Teacher.DoesNotExist:
+                    # 沒有 Teacher 也沒有 Profile，顯示錯誤訊息
+                    logout(request)
+                    context = {
+                        'error': '您的帳號尚未完成設定,請聯繫管理員',
+                        'title': '登入'
+                    }
+                    return render(request, 'courses/login.html', context)
         else:
             context = {'error': '用戶名或密碼不正確', 'title': '登入'}
             return render(request, 'courses/login.html', context)
@@ -470,28 +478,32 @@ def admin_add_teacher(request):
         teacher_form = TeacherForm(request.POST)
         
         if user_form.is_valid() and teacher_form.is_valid():
-            # 創建用戶
-            user = user_form.save()
-            
-            # 從 teacher_form 獲取 first_name 和 last_name (如果有的話)
-            if 'first_name' in teacher_form.cleaned_data:
-                user.first_name = teacher_form.cleaned_data['first_name']
-            if 'last_name' in teacher_form.cleaned_data:
-                user.last_name = teacher_form.cleaned_data['last_name']
-            user.save()
-            
-            # 創建教師 profile
-            profile = UserProfile.objects.create(user=user, role='teacher')
-            
-            # 創建 Teacher 對象
-            teacher = teacher_form.save(commit=False)
-            teacher.user = user
-            teacher.save()
-            
-            # 重定向到教師列表頁面,顯示成功訊息
-            from django.contrib import messages
-            messages.success(request, f'教師帳號 {user.username} 已成功建立!')
-            return redirect('courses:admin_teacher_list')
+            try:
+                # 創建用戶
+                user = user_form.save()
+                
+                # 從 teacher_form 獲取 first_name 和 last_name (如果有的話)
+                if 'first_name' in teacher_form.cleaned_data:
+                    user.first_name = teacher_form.cleaned_data['first_name']
+                if 'last_name' in teacher_form.cleaned_data:
+                    user.last_name = teacher_form.cleaned_data['last_name']
+                user.save()
+                
+                # 創建教師 profile
+                profile = UserProfile.objects.create(user=user, role='teacher')
+                
+                # 創建 Teacher 對象
+                teacher = teacher_form.save(commit=False)
+                teacher.user = user
+                teacher.save()
+                
+                # 重定向到教師列表頁面,顯示成功訊息
+                from django.contrib import messages
+                messages.success(request, f'教師帳號 {user.username} 已成功建立!')
+                return redirect('courses:admin_teacher_list')
+            except Exception as e:
+                from django.contrib import messages
+                messages.error(request, f'建立教師帳號時發生錯誤: {str(e)}')
     else:
         user_form = UserRegistrationForm()
         teacher_form = TeacherForm()
